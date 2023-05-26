@@ -1,10 +1,9 @@
-"use client"
-import { useState } from 'react';
+'use client'
+import { Box, Button, Textarea, Input, VStack } from '@chakra-ui/react';
+import { useState, ChangeEvent } from 'react';
 import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
-
 
 const UploadPage = () => {
   const router = useRouter();
@@ -22,50 +21,44 @@ const UploadPage = () => {
 
   const handleUpload = () => {
     if (title === '') {
-      alert('제목을 입력해주세요.');
+      alert('Please enter a title.');
       return;
     } else if (content === '') {
-      alert('내용을 입력해주세요.');
+      alert('Please enter content.');
       return;
     } else if (price === '') {
-      alert('가격을 입력해주세요.');
+      alert('Please enter a price.');
       return;
-    // } else if (image === null) {
-    //   alert('이미지를 선택해주세요.');
-    //   return;
+    } else if (image === null) {
+      alert('Please select an image.');
+      return;
     }
 
-    if (image !== null) {
-      const storage = getStorage();
+    const storage = getStorage();
 
-      // Create a reference to the Firebase storage
-      const storageRef = ref(storage, `image/${image?.name}`);
+    // Create a reference to the Firebase storage
+    const storageRef = ref(storage, `image/${image?.name}`);
 
-      uploadBytes(storageRef, image)
-        .then((snapshot) => {
-          getDownloadURL(snapshot.ref)
-            .then((url) => {
-              fetchData(url)
-            })
-            .catch((error) => {
-              alert("Error!")
-              console.error("Error", error);
-            });
-        })
-        .catch((error) => {
-          alert("Error!")
-          console.error("Error", error);
-        });
-    } else {
-      fetchData(null)
-    }
+    uploadBytes(storageRef, image)
+      .then((snapshot) => {
+        getDownloadURL(snapshot.ref)
+          .then((url) => {
+            fetchData(url)
+          })
+          .catch((error) => {
+            alert("Error!")
+            console.error("Error", error);
+          });
+      })
+      .catch((error) => {
+        alert("Error!")
+        console.error("Error", error);
+      });
   };
 
-  const fetchData = async (url: string | null) => {
-    // Create a reference to the Firebase database
+  const fetchData = async (url: string) => {
     const db = getFirestore();
 
-    // Create an object with the upload data
     const newUpload = {
       title,
       content,
@@ -74,8 +67,6 @@ const UploadPage = () => {
       date: new Date(),
     };
 
-    // Upload the object to the Firebase database
-    // Add a new document in collection "cities"
     addDoc(collection(db, "Product"), newUpload)
       .then(() => {
         alert("Success!");
@@ -88,13 +79,30 @@ const UploadPage = () => {
   }
 
   return (
-    <div className="container flex flex-col mx-auto mt-3 text-black">
-      <input type="text" className="form-control mt-2 px-3 py-2 rounded" value={title} onChange={e => setTitle(e.target.value)} placeholder="title" />
-      <textarea className="form-control mt-2 px-3 py-2 rounded" value={content} onChange={e => setContent(e.target.value)} placeholder="content" />
-      <input type="text" className="form-control mt-2 px-3 py-2 rounded" value={price} onChange={e => setPrice(e.target.value)} placeholder="price" />
-      <input className="form-control mt-2 px-3 py-2 rounded text-white" type="file" onChange={handleImageChange} />
-      <button className="btn btn-danger mt-3 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors" onClick={handleUpload}>올리기</button>
-    </div>
+    <VStack spacing={3} mt={6}>
+      <Input 
+        placeholder="Title" 
+        value={title} 
+        onChange={e => setTitle(e.target.value)} 
+      />
+      <Textarea 
+        placeholder="Content"
+        value={content}
+        onChange={e => setContent(e.target.value)}
+      />
+      <Input
+        placeholder="Price"
+        value={price}
+        onChange={e => setPrice(e.target.value)}
+      />
+      <Input type="file" onChange={handleImageChange} />
+      <Button 
+        colorScheme="blue" 
+        onClick={handleUpload}
+      >
+        Upload
+      </Button>
+    </VStack>
   )
 }
 

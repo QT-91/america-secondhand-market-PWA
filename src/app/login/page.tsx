@@ -31,7 +31,7 @@ const Home = () => {
         <Text fontSize="14pt" mt={16}>
           {loading && '🕒 Checking authentication...'}
           {!loading && user && `👋 Hi ${user?.email}, welcome!`}
-          {!user && '🙅‍♀️ You are not signed in yet.'}
+          {!loading && !user && '🙅‍♀️ You are not signed in yet.'}
         </Text>
 
         <Flex mt={16}>

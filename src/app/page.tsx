@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import ProductItem from '../components/productItem'
 import { getFirestore, getDocs, collection } from "firebase/firestore";
 
+import { Flex } from "@chakra-ui/react";
 import { Product } from '@/shared/types/product';
 
 
@@ -27,10 +28,10 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex flex-col">
+    <Flex direction="column">
       {products.map((product, i) => (
         <ProductItem key={product.id} product={product} />
       ))}
-    </main>
+    </Flex>
   )
 }

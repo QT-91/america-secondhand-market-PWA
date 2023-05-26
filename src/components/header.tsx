@@ -1,11 +1,10 @@
 'use client'
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-
+import { Button, Box, Text, useColorMode, Flex, Spacer, Link as ChakraLink, Image, Menu, MenuList, MenuItem, MenuButton } from "@chakra-ui/react";
+import { ChevronDownIcon } from '@chakra-ui/icons';
+import { useRouter } from "next/navigation";
 import { auth } from '@/firebase/app';
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { signOut } from "firebase/auth";
-import { useColorMode } from '@chakra-ui/react';
 
 
 const Header = () => {
@@ -26,52 +25,50 @@ const Header = () => {
   }
 
   return (
-    <ul className="flex">
-      <li className="flex-1 mr-2">
-        <Link 
-          className="text-center block border border-blue-500 rounded py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white" 
-          href="#"
-        >
-          Home
-        </Link>
-      </li>
-      <li className="flex-1 mr-2">
-        <Link 
-          className="text-center block border border-blue-500 rounded py-2 px-4 bg-blue-500 hover:bg-blue-700 text-white" 
-          href="/upload"
-        >
-          Upload
-        </Link>
-      </li>
+    <Flex>
+      <Box p="2">
+        <ChakraLink href="/">
+          <Button colorScheme="blue">Home</Button>
+        </ChakraLink>
+      </Box>
+      <Box p="2">
+        <ChakraLink href="/upload">
+          <Button colorScheme="blue">Upload</Button>
+        </ChakraLink>
+      </Box>
+
+      <Spacer />
+
+      <Box p="2">
+        <Button onClick={toggleColorMode}>
+          <Image 
+            src={`/images/color_mode/${colorMode === 'light' ? 'dark': 'light'}.svg`}
+            alt={colorMode === 'light' ? 'dark': 'light'}
+          />
+        </Button>
+      </Box>
       {!user ? (
-        <li className="flex-1 mr-2">
-          <Link 
-            className="text-center block border border-white rounded hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4" 
-            href="/login"
-          >
-            Sign In
-          </Link>
-        </li>
+        <Box p="2">
+          <ChakraLink href="/login">
+            <Button colorScheme="teal">Sign In</Button>
+          </ChakraLink>
+        </Box>
       ) : (
-        <li className="flex-1 mr-2">
-          <a 
-            className="text-center block py-2 px-4 text-gray-400 cursor-not-allowed"
-            onClick={handleSignOut}
-          >
-            Sign Out
-          </a>
-        </li>
+      <Box p="2">
+        <Menu>
+          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+            {user.displayName}
+          </MenuButton>
+          <MenuList>
+            <MenuItem onClick={handleSignOut} minH='40px'>
+              Sign Out
+            </MenuItem>
+          </MenuList>
+        </Menu>
+      </Box>
       )}
-      <li className="flex-1 mr-2">
-        <a 
-          className="text-center block border border-white rounded hover:border-gray-200 text-blue-500 hover:bg-gray-200 py-2 px-4"
-          onClick={toggleColorMode}
-        >
-          Toggle {colorMode === 'light' ? 'Dark' : 'Light'}
-        </a>
-      </li>
-    </ul>
-  )
-}
+    </Flex>
+  );
+};
 
 export default Header;
