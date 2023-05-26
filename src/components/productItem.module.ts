@@ -9,6 +9,7 @@ const ProductItemDiv = styled.div`
   max-width: 200px;
   width: 100%;
   border-radius: 10px;
+  background-color: white;
   background-size: cover;
   background-position: center;
 }

@@ -4,6 +4,6 @@ export interface Product {
     content: string;
     price: number;
     image: string;
-    date: Date;
+    date: Date | any;
     // Add additional product properties as needed
 }

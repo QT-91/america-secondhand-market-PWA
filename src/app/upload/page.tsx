@@ -39,13 +39,23 @@ const UploadPage = () => {
       const storage = getStorage();
 
       // Create a reference to the Firebase storage
-      const storageRef = ref(storage, image?.name);
+      const storageRef = ref(storage, `image/${image?.name}`);
 
-      uploadBytes(storageRef, image).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((url) => {
-          fetchData(url)
+      uploadBytes(storageRef, image)
+        .then((snapshot) => {
+          getDownloadURL(snapshot.ref)
+            .then((url) => {
+              fetchData(url)
+            })
+            .catch((error) => {
+              alert("Error!")
+              console.error("Error", error);
+            });
+        })
+        .catch((error) => {
+          alert("Error!")
+          console.error("Error", error);
         });
-      });
     } else {
       fetchData(null)
     }
@@ -68,8 +78,12 @@ const UploadPage = () => {
     // Add a new document in collection "cities"
     addDoc(collection(db, "Product"), newUpload)
       .then(() => {
-        alert("Document successfully written!");
+        alert("Success!");
         router.push('/')
+      })
+      .catch((error) => {
+        alert("Error!")
+        console.error("Error", error);
       });
   }
 
