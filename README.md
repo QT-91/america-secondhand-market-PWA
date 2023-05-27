@@ -1,3 +1,14 @@
+# america-secondhand-market (아메리카 당근마켓)
+
+### View - https://america-secondhand-market.vercel.app/
+
+---
+
+### references
+https://github.com/clairechabas/auth-firebase-next-react-jotai
+
+---
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
