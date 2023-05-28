@@ -7,7 +7,7 @@ const SignInWithProvider: React.FC = () => {
   const [signInWithGoogle, user, loading, fbError] = useSignInWithGoogle(auth)
 
   return (
-    <Flex>
+    <Flex direction="column">
       <Button isLoading={loading} onClick={() => signInWithGoogle()}>
         Continue with Google
       </Button>
