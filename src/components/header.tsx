@@ -1,5 +1,6 @@
 'use client'
-import { Button, Box, Text, useColorMode, Flex, Spacer, Link as ChakraLink, Image, Menu, MenuList, MenuItem, MenuButton } from "@chakra-ui/react";
+import { Button, Box, Text, useColorMode, Flex, Spacer, Link, Image, Menu, MenuList, MenuItem, MenuButton } from "@chakra-ui/react";
+import NextLink from 'next/link';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useRouter } from "next/navigation";
 import { auth } from '@/firebase/app';
@@ -27,14 +28,14 @@ const Header = () => {
   return (
     <Flex>
       <Box p="2">
-        <ChakraLink href="/">
+        <Link as={NextLink} href="/">
           <Button colorScheme="blue">Home</Button>
-        </ChakraLink>
+        </Link>
       </Box>
       <Box p="2">
-        <ChakraLink href="/upload">
+        <Link as={NextLink} href="/upload">
           <Button colorScheme="blue">Upload</Button>
-        </ChakraLink>
+        </Link>
       </Box>
 
       <Spacer />
@@ -49,9 +50,9 @@ const Header = () => {
       </Box>
       {!user ? (
         <Box p="2">
-          <ChakraLink href="/login">
+          <Link as={NextLink} href="/login">
             <Button colorScheme="teal">Sign In</Button>
-          </ChakraLink>
+          </Link>
         </Box>
       ) : (
       <Box p="2">
