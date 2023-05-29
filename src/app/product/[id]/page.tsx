@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation';
 import Modal from 'react-modal';
+import { COLLECTION_PATH_PRODUCT } from '@/firebase/constants';
 
 import { Product } from '@/shared/types/product';
 
@@ -30,7 +31,7 @@ export default function ProductDetail({ params }: Props) {
 
     const fetchData = async () => {
       const db = getFirestore();
-      const docRef = doc(db, 'Product', params.id);
+      const docRef = doc(db, COLLECTION_PATH_PRODUCT, params.id);
       const docSnap = await getDoc(docRef);
       
       if (isMountedRef.current && docSnap.exists()) {
@@ -54,7 +55,7 @@ export default function ProductDetail({ params }: Props) {
   
   const handleDelete = async () => {
     const db = getFirestore();
-    await deleteDoc(doc(db, 'Product', params.id));
+    await deleteDoc(doc(db, COLLECTION_PATH_PRODUCT, params.id));
     router.push('/');
   };
 

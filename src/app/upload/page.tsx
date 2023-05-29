@@ -4,6 +4,8 @@ import { useState, ChangeEvent } from 'react';
 import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRouter } from 'next/navigation';
+import { COLLECTION_PATH_PRODUCT, STORAGE_PATH_IMAGE } from '@/firebase/constants';
+
 
 const UploadPage = () => {
   const router = useRouter();
@@ -37,7 +39,7 @@ const UploadPage = () => {
     const storage = getStorage();
 
     // Create a reference to the Firebase storage
-    const storageRef = ref(storage, `image/${image?.name}`);
+    const storageRef = ref(storage, `${STORAGE_PATH_IMAGE}/${image?.name}`);
 
     uploadBytes(storageRef, image)
       .then((snapshot) => {
@@ -67,7 +69,7 @@ const UploadPage = () => {
       date: new Date(),
     };
 
-    addDoc(collection(db, "Product"), newUpload)
+    addDoc(collection(db, COLLECTION_PATH_PRODUCT), newUpload)
       .then(() => {
         alert("Success!");
         router.push('/')
