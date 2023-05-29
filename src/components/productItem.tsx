@@ -1,4 +1,5 @@
 import { Box, Heading, Text, VStack, Flex, LinkBox, LinkOverlay } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import styled from '@emotion/styled';
 import { Product } from '@/shared/types/product';
 
@@ -14,7 +15,7 @@ const Thumbnail = styled(Box)`
 const ProductItem: React.FC<Props> = ({ product }) => {
   return (
     <LinkBox as="article" maxW="sm" p="5" borderWidth="1px" rounded="md">
-      <LinkOverlay href={`/product/${product.id}`}>
+      <LinkOverlay as={NextLink} href={`/product/${product.id}`}>
         <Thumbnail
           h="200px"
           w="full"
