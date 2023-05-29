@@ -1,9 +1,12 @@
 'use client'
 import { useRef, useState, useEffect } from 'react';
+import { Flex, Link } from '@chakra-ui/react';
 import Image from 'next/image';
-import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { useRouter } from 'next/navigation';
 import Modal from 'react-modal';
+import NextLink from 'next/link';
+
+import { getFirestore, doc, getDoc, deleteDoc } from "firebase/firestore";
 import { COLLECTION_PATH_PRODUCT } from '@/firebase/constants';
 
 import { Product } from '@/shared/types/product';
@@ -75,12 +78,21 @@ export default function ProductDetail({ params }: Props) {
         )}
       </div>
 
-      <button 
-        className="btn btn-danger mt-3 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition-colors" 
-        onClick={() => setModalOpen(true)}
-      >
-        Delete
-      </button>
+      <Flex gridGap={3}>
+        <Link
+          as={NextLink}
+          className="btn btn-danger mt-3 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 transition-colors" 
+          href={`/product/${params.id}/update`}
+        >
+          Update
+        </Link>
+        <button 
+          className="btn btn-danger mt-3 bg-red-600 text-white px-3 py-2 rounded hover:bg-red-700 transition-colors" 
+          onClick={() => setModalOpen(true)}
+        >
+          Delete
+        </button>
+      </Flex>
 
       <Modal 
         isOpen={modalOpen} 
