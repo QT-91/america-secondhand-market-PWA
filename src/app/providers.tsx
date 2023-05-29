@@ -8,6 +8,7 @@ import {
   localStorageManager,
   ColorModeProvider,
 } from '@chakra-ui/react'
+import theme from '@/theme/theme'
 
 export function Providers({ 
   cookies, children 
@@ -22,7 +23,7 @@ export function Providers({
   return (
     <CacheProvider>
       <ColorModeProvider>
-        <ChakraProvider resetCSS={true} colorModeManager={colorModeManager}>
+        <ChakraProvider theme={theme} resetCSS={true} colorModeManager={colorModeManager}>
           {children}
         </ChakraProvider>
       </ColorModeProvider>
