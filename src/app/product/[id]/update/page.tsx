@@ -1,6 +1,6 @@
 'use client'
 import { Box, Button, Textarea, Input, VStack } from '@chakra-ui/react';
-import { useState, ChangeEvent, useEffect } from 'react';
+import { useState, ChangeEvent, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
@@ -23,6 +23,9 @@ const UpdatePage = ({ params }: Props) => {
   const [price, setPrice] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // Fetch data when component mounts
@@ -40,6 +43,7 @@ const UpdatePage = ({ params }: Props) => {
       setContent(data.content);
       setPrice(data.price);
       setImageUrl(data.image);
+      setPreviewUrl(data.image);
     } else {
       console.log('No such document!');
     }
@@ -48,6 +52,17 @@ const UpdatePage = ({ params }: Props) => {
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
+      setPreviewUrl(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const handleImageClear = () => {
+    setImage(null);
+    setPreviewUrl(null);
+
+    // Clear the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -112,7 +127,13 @@ const UpdatePage = ({ params }: Props) => {
         value={price}
         onChange={e => setPrice(e.target.value)}
       />
-      <Input type="file" onChange={handleImageChange} />
+      <Input ref={fileInputRef} type="file" onChange={handleImageChange} />
+      {previewUrl && (
+        <>
+          <Box w="md" h="md" bgImage={previewUrl ? `url('${previewUrl}')` : "url('https://via.placeholder.com/350')"} bgSize="cover" bgPosition="center" />
+          <Button onClick={handleImageClear}>Remove Image</Button>
+        </>
+      )}
       <Button 
         colorScheme="blue" 
         onClick={handleUpdate}

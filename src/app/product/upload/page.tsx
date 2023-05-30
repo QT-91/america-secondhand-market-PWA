@@ -1,6 +1,6 @@
 'use client'
-import { Button, Textarea, Input, VStack } from '@chakra-ui/react';
-import { useState, ChangeEvent } from 'react';
+import { Button, Textarea, Input, VStack, Box } from '@chakra-ui/react';
+import { useState, ChangeEvent, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { getFirestore, addDoc, collection } from "firebase/firestore";
@@ -15,10 +15,24 @@ const UploadPage = () => {
   const [content, setContent] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
+      setPreviewUrl(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const handleImageClear = () => {
+    setImage(null);
+    setPreviewUrl(null);
+
+    // Clear the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -58,6 +72,7 @@ const UploadPage = () => {
         console.error("Error", error);
       });
   };
+  
 
   const fetchData = async (url: string) => {
     const db = getFirestore();
@@ -98,7 +113,13 @@ const UploadPage = () => {
         value={price}
         onChange={e => setPrice(e.target.value)}
       />
-      <Input type="file" onChange={handleImageChange} />
+      <Input ref={fileInputRef} type="file" onChange={handleImageChange} />
+      {previewUrl && (
+        <>
+          <Box w="md" h="md" bgImage={previewUrl ? `url('${previewUrl}')` : "url('https://via.placeholder.com/350')"} bgSize="cover" bgPosition="center" />
+          <Button onClick={handleImageClear}>Remove Image</Button>
+        </>
+      )}
       <Button 
         colorScheme="blue" 
         onClick={handleUpload}
