@@ -33,7 +33,7 @@ const Header = () => {
         </Link>
       </Box>
       <Box p="2">
-        <Link as={NextLink} href="/upload">
+        <Link as={NextLink} href="/product/upload">
           <Button colorScheme="blue">Upload</Button>
         </Link>
       </Box>

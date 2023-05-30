@@ -1,9 +1,12 @@
 'use client'
-import { Box, Button, Textarea, Input, VStack } from '@chakra-ui/react';
-import { useState, ChangeEvent } from 'react';
+import { Button, Textarea, Input, VStack, Box } from '@chakra-ui/react';
+import { useState, ChangeEvent, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useRouter } from 'next/navigation';
+import { COLLECTION_PATH_PRODUCT, STORAGE_PATH_IMAGE } from '@/firebase/constants';
+
 
 const UploadPage = () => {
   const router = useRouter();
@@ -12,10 +15,24 @@ const UploadPage = () => {
   const [content, setContent] = useState('');
   const [price, setPrice] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setImage(e.target.files[0]);
+      setPreviewUrl(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
+  const handleImageClear = () => {
+    setImage(null);
+    setPreviewUrl(null);
+
+    // Clear the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
     }
   };
 
@@ -37,7 +54,7 @@ const UploadPage = () => {
     const storage = getStorage();
 
     // Create a reference to the Firebase storage
-    const storageRef = ref(storage, `image/${image?.name}`);
+    const storageRef = ref(storage, `${STORAGE_PATH_IMAGE}/${image?.name}`);
 
     uploadBytes(storageRef, image)
       .then((snapshot) => {
@@ -55,6 +72,7 @@ const UploadPage = () => {
         console.error("Error", error);
       });
   };
+  
 
   const fetchData = async (url: string) => {
     const db = getFirestore();
@@ -67,7 +85,7 @@ const UploadPage = () => {
       date: new Date(),
     };
 
-    addDoc(collection(db, "Product"), newUpload)
+    addDoc(collection(db, COLLECTION_PATH_PRODUCT), newUpload)
       .then(() => {
         alert("Success!");
         router.push('/')
@@ -95,7 +113,13 @@ const UploadPage = () => {
         value={price}
         onChange={e => setPrice(e.target.value)}
       />
-      <Input type="file" onChange={handleImageChange} />
+      <Input ref={fileInputRef} type="file" onChange={handleImageChange} />
+      {previewUrl && (
+        <>
+          <Box w="md" h="md" bgImage={previewUrl ? `url('${previewUrl}')` : "url('https://via.placeholder.com/350')"} bgSize="cover" bgPosition="center" />
+          <Button onClick={handleImageClear}>Remove Image</Button>
+        </>
+      )}
       <Button 
         colorScheme="blue" 
         onClick={handleUpload}

@@ -1,4 +1,5 @@
 import { Box, Heading, Text, VStack, Flex, LinkBox, LinkOverlay } from '@chakra-ui/react';
+import NextLink from 'next/link';
 import styled from '@emotion/styled';
 import { Product } from '@/shared/types/product';
 
@@ -11,10 +12,24 @@ const Thumbnail = styled(Box)`
   background-position: center;
 `;
 
+const options: Intl.DateTimeFormatOptions = {
+  weekday: "short",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  timeZone: "America/New_York",
+	timeZoneName: "short",
+};
+
 const ProductItem: React.FC<Props> = ({ product }) => {
+  const datetime = product.date.toDate().toLocaleString('en-US', options);
+
   return (
     <LinkBox as="article" maxW="sm" p="5" borderWidth="1px" rounded="md">
-      <LinkOverlay href={`/product/${product.id}`}>
+      <LinkOverlay as={NextLink} href={`/product/${product.id}`}>
         <Thumbnail
           h="200px"
           w="full"
@@ -22,7 +37,7 @@ const ProductItem: React.FC<Props> = ({ product }) => {
         />
         <VStack align="start" spacing={2}>
           <Heading size="sm">{product.title}</Heading>
-          <Text fontSize="sm">{String(new Date(product.date?.seconds))}</Text>
+          <Text fontSize="sm">{datetime}</Text>
           <Text>{product.price}$</Text>
           <Flex justify="end" w="full">
             <Text>{product.content}</Text>
