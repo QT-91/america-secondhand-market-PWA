@@ -116,7 +116,7 @@ const UploadPage = () => {
       <Input ref={fileInputRef} type="file" onChange={handleImageChange} />
       {previewUrl && (
         <>
-          <Box w="md" h="md" bgImage={previewUrl ? `url('${previewUrl}')` : "url('https://via.placeholder.com/350')"} bgSize="cover" bgPosition="center" />
+          <Box w="md" h="md" bgImage={`url('${previewUrl}')`} bgSize="cover" bgPosition="center" />
           <Button onClick={handleImageClear}>Remove Image</Button>
         </>
       )}
